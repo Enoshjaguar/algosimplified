@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 const Login = () => {
     const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,13 +24,13 @@ const Login = () => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/users/login",
+      `${API_URL}/api/users/login`,
       {
         mobile: formData.mobile,
         password: formData.password
       }
     );
-
+console.log("api url",API_URL)
     // Save JWT token
     localStorage.setItem("token", response.data.token);
     

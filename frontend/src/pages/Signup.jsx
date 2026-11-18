@@ -5,6 +5,7 @@ import { User, Lock, ArrowRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Signup = () => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/users/signup",
+      `${API_URL}/api/users/signup`,
       {
         name: formData.name,
         mobile: formData.mobile,

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 import { ChevronDown, ChevronRight, Check } from "lucide-react";
 
 const Topics = () => {
@@ -15,7 +16,7 @@ const Topics = () => {
     const fetchProblems = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/problems/getallproblems"
+          `${API_URL}/problems/getallproblems`
         );
 
         setProblems(response.data.problems);
@@ -32,7 +33,7 @@ const Topics = () => {
   const handleSolve = async (problemId) => {
   try {
     const response = await axios.patch(
-      `http://localhost:5000/progress/${problemId}`,
+      `${API_URL}/progress/${problemId}`,
       {
         isSolved: true
       }
