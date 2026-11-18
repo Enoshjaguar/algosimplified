@@ -1,50 +1,116 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 import { ChevronDown, ChevronRight, Check } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const Topics = () => {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [solvedProblems, setSolvedProblems] = useState([]);
 
   const [expandedTopics, setExpandedTopics] = useState([]);
   const [expandedPatterns, setExpandedPatterns] = useState([]);
 
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/problems/getallproblems`
-        );
+  const solveAudioRef = useRef(null);
 
-        setProblems(response.data.problems);
-      } catch (err) {
-        setError("Unable to fetch problems. Please try again.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  solveAudioRef.current = new Audio("/sounds/solve.mp3");
+  solveAudioRef.current.volume = 0.35;
+}, []);
 
-    fetchProblems();
-  }, []);
-  const handleSolve = async (problemId) => {
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const [problemsResponse, progressResponse] = await Promise.all([
+        axios.get(`${API_URL}/problems/getallproblems`),
+
+        axios.get(`${API_URL}/progress`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      ]);
+
+      setProblems(problemsResponse.data.problems);
+
+      const solvedIds = progressResponse.data.progress
+        .filter((item) => item.isSolved)
+        .map((item) => item.problem);
+
+      setSolvedProblems(solvedIds.map((id) => String(id._id || id)));
+
+    } catch (err) {
+      setError("Unable to fetch problems or progress. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+const handleSolve = async (problemId) => {
   try {
+    const token = localStorage.getItem("token");
+
+    const isCurrentlySolved = solvedProblems.includes(problemId);
+
     const response = await axios.patch(
       `${API_URL}/progress/${problemId}`,
       {
-        isSolved: true
+        isSolved: !isCurrentlySolved
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
     );
+
+    if (isCurrentlySolved) {
+      setSolvedProblems((previous) =>
+        previous.filter((id) => id !== problemId)
+      );
+    } else {
+  setSolvedProblems((previous) => [...previous, problemId]);
+
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: {
+      x: 0.85,
+      y: 0.65
+    },
+    colors: ["#22c55e", "#facc15", "#38bdf8", "#f472b6", "#a78bfa"],
+    startVelocity: 35,
+    gravity: 0.9,
+    scalar: 0.9,
+    ticks: 100
+  });
+  if (solveAudioRef.current) {
+  solveAudioRef.current.currentTime = 0;
+  solveAudioRef.current.play().catch(console.error);
+}
+}
 
     console.log(response.data.message);
 
   } catch (error) {
-    console.error("Error marking problem as solved:", error.response?.data || error.message);
+    console.error(
+      "Error updating problem status:",
+      error.response?.data || error.message
+    );
   }
 };
+
 
   // Keep topics in the order we choose
   const topicOrder = [
@@ -220,11 +286,21 @@ const Topics = () => {
     <span className="problem-score">
       {problem.score} points
     </span>
-    <button className="solve-btn"
-    onClick={()=>handleSolve(problem._id)}
-    >
+    
+<button
+  className={`solve-btn ${
+    solvedProblems.includes(problem._id) ? "solved" : ""
+  }`}
+  onClick={() => handleSolve(problem._id)}
+  title={
+    solvedProblems.includes(problem._id)
+      ? "Mark as unsolved"
+      : "Mark as solved"
+  }
+>
   <Check size={16} />
 </button>
+
   </div>
 </div>
 
