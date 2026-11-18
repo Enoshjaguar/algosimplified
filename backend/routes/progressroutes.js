@@ -12,4 +12,10 @@ router.patch(
 
 router.get('/',authMiddleware,progressController.getUserProgress)
 
+router.get(
+    '/dashboard-stats',
+    authMiddleware,
+    progressController.getDashboardStats
+);
+
 module.exports = router;

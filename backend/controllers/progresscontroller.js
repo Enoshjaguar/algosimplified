@@ -80,4 +80,81 @@ const getUserProgress = async(req,res)=>{
     }
 }
 
-module.exports = { updateProblemStatus,getUserProgress };
+
+const getDashboardStats = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Fetch all solved problems with their problem details
+        const solvedProgress = await UserProgress.find({
+            user: userId,
+            isSolved: true
+        })
+        .populate("problem")
+        .sort({ updatedAt: -1 });
+
+        // Remove records whose referenced problem no longer exists
+        const validProgress = solvedProgress.filter(
+            item => item.problem !== null
+        );
+
+        // Total problems in database
+        const totalProblems = await Problem.countDocuments();
+
+        // Total solved
+        const problemsSolved = validProgress.length;
+
+        // Total score
+        const totalScore = validProgress.reduce(
+            (total, item) => total + item.problem.score,
+            0
+        );
+
+        // Difficulty breakdown
+        const difficulty = {
+            easy: 0,
+            medium: 0,
+            hard: 0
+        };
+
+        validProgress.forEach(item => {
+            const level = item.problem.difficulty.toLowerCase();
+
+            if (difficulty[level] !== undefined) {
+                difficulty[level]++;
+            }
+        });
+
+        // Completion percentage
+        const completion = totalProblems > 0
+            ? Math.round((problemsSolved / totalProblems) * 100)
+            : 0;
+
+        // Recent activity
+        const recentActivity = validProgress
+            .slice(0, 5)
+            .map(item => ({
+                title: item.problem.title,
+                difficulty: item.problem.difficulty,
+                score: item.problem.score,
+                solvedAt: item.updatedAt
+            }));
+
+        return res.status(200).json({
+            problemsSolved,
+            totalScore,
+            completion,
+            difficulty,
+            recentActivity
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error fetching dashboard statistics",
+            error: error.message
+        });
+    }
+};
+
+
+module.exports = { updateProblemStatus,getUserProgress, getDashboardStats };
