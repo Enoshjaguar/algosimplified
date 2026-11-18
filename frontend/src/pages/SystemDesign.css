@@ -1,0 +1,156 @@
+
+.system-design-page {
+  padding: 30px;
+  color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header */
+.system-design-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.system-design-heading-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+  border-radius: 16px;
+}
+
+.system-design-header h1 {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.system-design-header p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Topic count */
+.system-design-count {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Grid */
+.system-design-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* Cards */
+.system-topic-card {
+  padding: 25px;
+  background: #172033;
+  border: 1px solid #263449;
+  border-radius: 16px;
+  transition: 0.25s ease;
+}
+
+.system-topic-card:hover {
+  transform: translateY(-5px);
+  border-color: #8b5cf6;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.system-topic-category {
+  display: inline-block;
+  padding: 6px 12px;
+  color: #c4b5fd;
+  background: rgba(124, 58, 237, 0.15);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.system-topic-card h2 {
+  margin: 20px 0 12px;
+  font-size: 19px;
+  color: #f8fafc;
+}
+
+.system-topic-card p {
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 48px;
+}
+
+.system-topic-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: #a78bfa;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Loading */
+.system-loading,
+.system-error {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #94a3b8;
+}
+
+.spin {
+  animation: systemSpin 1s linear infinite;
+}
+
+@keyframes systemSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .system-design-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .system-design-page {
+    padding: 20px 15px;
+  }
+
+  .system-design-header {
+    gap: 12px;
+  }
+
+  .system-design-heading-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .system-design-header h1 {
+    font-size: 22px;
+  }
+
+  .system-design-header p {
+    font-size: 12px;
+  }
+
+  .system-design-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .system-topic-card {
+    padding: 20px;
+  }
+}

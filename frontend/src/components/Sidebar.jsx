@@ -5,13 +5,15 @@ import {
   Code2,
   BookOpen,
   Trophy,
-  Settings
+  Settings,
+  Network
 } from "lucide-react";
 
 const Sidebar = () => {
   const links = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
     { name: "DSA Sheet", path: "/topics", icon: Code2 },
+    {name:"System Design", path: "/system-design", icon: Network},
     { name: "My Progress", path: "/progress", icon: BookOpen },
     { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
     { name: "Settings", path: "/settings", icon: Settings }

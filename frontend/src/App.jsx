@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ComingSoon from "./components/ComingSoon";
+import SystemDesign from "./pages/SystemDesign";
 
 function App() {
   const renderProtectedPage = (page) => (
@@ -38,6 +39,12 @@ function App() {
           path="/topics"
           element={renderProtectedPage(<Topics />)}
         />
+
+        <Route
+  path="/system-design"
+  element={renderProtectedPage(<SystemDesign />)}
+/>
+        
 
         <Route
           path="/progress"

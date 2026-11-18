@@ -10,6 +10,7 @@ app.use(cors()  )
 const userroutes = require('./routes/userroutes')
 const problemroutes = require('./routes/problemsroutes')
 const progressRoutes = require('./routes/progressroutes')
+const systemdesignroutes = require('./routes/SystemDesignRoutes')
 const port = process.env.PORT || 5000
 app.get("/",(req,res)=>{
     res.status(200).json({message:"backend is running"})
@@ -17,6 +18,7 @@ app.get("/",(req,res)=>{
 app.use('/api/users',userroutes)
 app.use('/problems',problemroutes)
 app.use('/progress',progressRoutes)
+app.use('/api/system-design',systemdesignroutes)
 const startServer = async()=>{
     await connectDB()
     app.listen((port),()=>{
