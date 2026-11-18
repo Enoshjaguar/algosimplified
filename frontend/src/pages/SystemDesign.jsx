@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Network, LoaderCircle } from "lucide-react";
 import "./SystemDesign.css";
-
+import { Link } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const SystemDesign = () => {
@@ -61,22 +61,26 @@ const SystemDesign = () => {
       </div>
 
       <div className="system-design-grid">
-        {topics.map((topic) => (
-          <div className="system-topic-card" key={topic._id}>
-            <span className="system-topic-category">
-              {topic.category}
-            </span>
+  {topics.map((topic) => (
+    <Link
+      to={`/system-design/${topic.slug}`}
+      className="system-topic-card"
+      key={topic._id}
+    >
+      <span className="system-topic-category">
+        {topic.category}
+      </span>
 
-            <h2>{topic.title}</h2>
+      <h2>{topic.title}</h2>
 
-            <p>{topic.description}</p>
+      <p>{topic.description}</p>
 
-            <span className="system-topic-link">
-              Explore Topic →
-            </span>
-          </div>
-        ))}
-      </div>
+      <span className="system-topic-link">
+        Explore Topic →
+      </span>
+    </Link>
+  ))}
+</div>
     </div>
   );
 };

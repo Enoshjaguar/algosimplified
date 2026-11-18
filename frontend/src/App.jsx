@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ComingSoon from "./components/ComingSoon";
 import SystemDesign from "./pages/SystemDesign";
+import SystemDesignDetails from "./pages/SystemDesignDetails";
+import Profile from "./pages/Profile";
 
 function App() {
   const renderProtectedPage = (page) => (
@@ -39,12 +41,19 @@ function App() {
           path="/topics"
           element={renderProtectedPage(<Topics />)}
         />
+        <Route
+  path="/profile"
+  element={renderProtectedPage(<Profile />)}
+/>
 
         <Route
   path="/system-design"
   element={renderProtectedPage(<SystemDesign />)}
 />
-        
+    <Route
+  path="/system-design/:slug"
+  element={renderProtectedPage(<SystemDesignDetails />)}
+/>    
 
         <Route
           path="/progress"
