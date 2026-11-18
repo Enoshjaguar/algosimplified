@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar";
@@ -6,8 +7,20 @@ import Topics from "./pages/Topics";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ComingSoon from "./components/ComingSoon";
 
 function App() {
+  const renderProtectedPage = (page) => (
+    <ProtectedRoute>
+      <div className="app-layout">
+        <Sidebar />
+        <main className="main-content">
+          {page}
+        </main>
+      </div>
+    </ProtectedRoute>
+  );
+
   return (
     <BrowserRouter>
       <Routes>
@@ -16,33 +29,56 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Pages with sidebar */}
-       <Route
-  path="/"
-  element={
-    <ProtectedRoute>
-      <div className="app-layout">
-        <Sidebar />
-        <main className="main-content">
-          <Dashboard />
-        </main>
-      </div>
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/"
+          element={renderProtectedPage(<Dashboard />)}
+        />
 
         <Route
-  path="/topics"
-  element={
-    <ProtectedRoute>
-      <div className="app-layout">
-        <Sidebar />
-        <main className="main-content">
-          <Topics />
-        </main>
-      </div>
-    </ProtectedRoute>
-  }
-/>
+          path="/topics"
+          element={renderProtectedPage(<Topics />)}
+        />
+
+        <Route
+          path="/progress"
+          element={renderProtectedPage(
+            <ComingSoon
+              title="My Progress"
+              description="Track your coding journey, monitor your achievements, and see how far you've come. Coming soon!"
+            />
+          )}
+        />
+
+        <Route
+          path="/leaderboard"
+          element={renderProtectedPage(
+            <ComingSoon
+              title="Leaderboard"
+              description="Compete with fellow learners, earn points, and climb the AlgoSimplified rankings. Coming soon!"
+            />
+          )}
+        />
+
+        <Route
+          path="/settings"
+          element={renderProtectedPage(
+            <ComingSoon
+              title="Settings"
+              description="Personalize your learning experience and manage your account preferences. Coming soon!"
+            />
+          )}
+        />
+
+        {/* Fallback for unknown routes */}
+        <Route
+          path="*"
+          element={renderProtectedPage(
+            <ComingSoon
+              title="Page Not Found"
+              description="The page you're looking for doesn't exist yet."
+            />
+          )}
+        />
       </Routes>
     </BrowserRouter>
   );
