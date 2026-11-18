@@ -7,7 +7,7 @@ import {
   CalendarDays,
   LoaderCircle
 } from "lucide-react";
-//import "./Profile.css";
+import "./Profile.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
