@@ -1,26 +1,38 @@
 
 const UserProgress = require('../models/userprogress')
 const Problem = require('../models/problem')
+const User = require('../models/usersignup')
+
+const getTodayDate = () => {
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(new Date());
+};
+
+const getDateDifference = (previousDate, currentDate) => {
+    const previous = new Date(`${previousDate}T00:00:00Z`);
+    const current = new Date(`${currentDate}T00:00:00Z`);
+
+    return Math.round(
+        (current - previous) / (1000 * 60 * 60 * 24)
+    );
+};
 
 const updateProblemStatus = async (req, res) => {
     try {
-        // Get problem ID from URL
         const problemId = req.params.problemId;
-
-        // Get logged-in user ID from JWT middleware
         const userId = req.user.id;
-
-        // Get solved status from request body
         const { isSolved } = req.body;
 
-        // Validate isSolved
         if (typeof isSolved !== 'boolean') {
             return res.status(400).json({
                 message: "isSolved must be true or false"
             });
         }
 
-        // Check whether problem exists
         const problem = await Problem.findById(problemId);
 
         if (!problem) {
@@ -29,7 +41,7 @@ const updateProblemStatus = async (req, res) => {
             });
         }
 
-        // Create or update user progress
+        // Update problem progress
         const progress = await UserProgress.findOneAndUpdate(
             {
                 user: userId,
@@ -39,11 +51,56 @@ const updateProblemStatus = async (req, res) => {
                 $set: { isSolved: isSolved }
             },
             {
-    returnDocument: 'after',
-    upsert: true,
-    runValidators: true
-}
+                returnDocument: 'after',
+                upsert: true,
+                runValidators: true
+            }
         );
+
+        // Update streak only when marking as solved
+        if (isSolved) {
+            const user = await User.findById(userId);
+            console.log("STREAK UPDATE STARTED");
+
+console.log("USER FOUND:", user ? user.name : "Not found");
+console.log("TODAY:", getTodayDate());
+console.log("CURRENT STREAK:", user?.currentStreak);
+
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                });
+            }
+
+            const today = getTodayDate();
+
+            const currentStreak = user.currentStreak || 0;
+            const longestStreak = user.longestStreak || 0;
+
+            if (!user.lastSolvedDate) {
+                user.currentStreak = 1;
+            } else {
+                const difference = getDateDifference(
+                    user.lastSolvedDate,
+                    today
+                );
+
+                if (difference === 1) {
+                    user.currentStreak = currentStreak + 1;
+                } else if (difference > 1) {
+                    user.currentStreak = 1;
+                }
+            }
+
+            user.longestStreak = Math.max(
+                longestStreak,
+                user.currentStreak
+            );
+
+            user.lastSolvedDate = today;
+
+            await user.save();
+        }
 
         return res.status(200).json({
             message: isSolved
@@ -53,12 +110,15 @@ const updateProblemStatus = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Streak update error:", error);
+
         return res.status(500).json({
             message: "Error updating problem status",
             error: error.message
         });
     }
 };
+
 
 
 const getUserProgress = async(req,res)=>{
