@@ -133,13 +133,13 @@ const ActivityHeatmap = () => {
             <div className="heatmap-scroll">
                 <div className="heatmap-calendar">
 
-                    <div className="heatmap-months">
+                  <div className="heatmap-months">
     {monthLabels.map((month, index) => (
         <span
             key={index}
             className="heatmap-month"
             style={{
-                gridColumnStart: month.weekIndex + 1
+                "--week-index": month.weekIndex
             }}
         >
             {month.name}
