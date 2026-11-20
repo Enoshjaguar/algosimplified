@@ -2,7 +2,7 @@
 const UserProgress = require('../models/userprogress')
 const Problem = require('../models/problem')
 const User = require('../models/usersignup')
-
+const mongoose = require("mongoose")
 const getTodayDate = () => {
     return new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Kolkata',
@@ -60,11 +60,8 @@ const updateProblemStatus = async (req, res) => {
         // Update streak only when marking as solved
         if (isSolved) {
             const user = await User.findById(userId);
+            
             console.log("STREAK UPDATE STARTED");
-
-console.log("USER FOUND:", user ? user.name : "Not found");
-console.log("TODAY:", getTodayDate());
-console.log("CURRENT STREAK:", user?.currentStreak);
 
             if (!user) {
                 return res.status(404).json({
@@ -124,6 +121,7 @@ console.log("CURRENT STREAK:", user?.currentStreak);
 const getUserProgress = async(req,res)=>{
     try{
         const userId = req.user.id
+        const user = await User.findById(userId);
         const progress=  await UserProgress.find({
             user:userId
         })
@@ -143,7 +141,13 @@ const getUserProgress = async(req,res)=>{
 
 const getDashboardStats = async (req, res) => {
     try {
+        console.log("🔥 getDashboardStats function called");
         const userId = req.user.id;
+        const user = await User.findById(userId);
+        console.log("Sending streak values:", {
+    currentStreak: user.currentStreak,
+    longestStreak: user.longestStreak
+});
 
         // Fetch all solved problems with their problem details
         const solvedProgress = await UserProgress.find({
@@ -200,21 +204,163 @@ const getDashboardStats = async (req, res) => {
                 solvedAt: item.updatedAt
             }));
 
+     return res.status(200).json({
+    problemsSolved,
+    totalScore,
+    completion,
+    difficulty,
+    recentActivity,
+    currentStreak: user.currentStreak || 0,
+    longestStreak: user.longestStreak || 0
+});
+
+    } catch (error) {
+    console.error("DASHBOARD STATS ERROR:", error);
+
+    return res.status(500).json({
+        message: "Error fetching dashboard statistics",
+        error: error.message
+    });
+}
+};
+
+
+const getActivityHeatmap = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const activity = await UserProgress.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(userId),
+                    isSolved: true
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$updatedAt",
+                            timezone: "Asia/Kolkata"
+                        }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
         return res.status(200).json({
-            problemsSolved,
-            totalScore,
-            completion,
-            difficulty,
-            recentActivity
+            activity
         });
 
     } catch (error) {
+        console.error("Heatmap error:", error);
+
         return res.status(500).json({
-            message: "Error fetching dashboard statistics",
+            message: "Error fetching activity heatmap",
             error: error.message
         });
     }
 };
 
 
-module.exports = { updateProblemStatus,getUserProgress, getDashboardStats };
+const getLeaderboard = async (req, res) => {
+    try {
+        const leaderboard = await UserProgress.aggregate([
+            // Only solved problems
+            {
+                $match: {
+                    isSolved: true
+                }
+            },
+
+            // Join with Problem collection
+            {
+                $lookup: {
+                    from: "problems",
+                    localField: "problem",
+                    foreignField: "_id",
+                    as: "problemDetails"
+                }
+            },
+
+            // Remove invalid problem references
+            {
+                $unwind: "$problemDetails"
+            },
+
+            // Calculate each user's points and solved count
+            {
+                $group: {
+                    _id: "$user",
+                    totalScore: {
+                        $sum: "$problemDetails.score"
+                    },
+                    problemsSolved: {
+                        $sum: 1
+                    }
+                }
+            },
+
+            // Join with User collection
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+
+            {
+                $unwind: "$userDetails"
+            },
+
+            // Return only public information
+            {
+                $project: {
+                    _id: 0,
+                    userId: "$_id",
+                    name: "$userDetails.name",
+                    totalScore: 1,
+                    problemsSolved: 1
+                }
+            },
+
+            // Highest score first
+            {
+                $sort: {
+                    totalScore: -1,
+                    problemsSolved: -1,
+                    name: 1
+                }
+            }
+        ]);
+
+        // Assign ranks
+        const rankedLeaderboard = leaderboard.map((user, index) => ({
+            rank: index + 1,
+            ...user
+        }));
+
+        return res.status(200).json({
+            leaderboard: rankedLeaderboard
+        });
+
+    } catch (error) {
+        console.error("Leaderboard error:", error);
+
+        return res.status(500).json({
+            message: "Error fetching leaderboard",
+            error: error.message
+        });
+    }
+};
+
+
+
+module.exports = { updateProblemStatus,getUserProgress, getDashboardStats, getActivityHeatmap, getLeaderboard };

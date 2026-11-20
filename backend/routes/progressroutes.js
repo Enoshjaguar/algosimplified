@@ -18,4 +18,17 @@ router.get(
     progressController.getDashboardStats
 );
 
+
+router.get(
+    '/activity-heatmap',
+    authMiddleware,
+    progressController.getActivityHeatmap
+);
+
+router.get(
+    '/leaderboard',
+    authMiddleware,
+    progressController.getLeaderboard
+);
+
 module.exports = router;

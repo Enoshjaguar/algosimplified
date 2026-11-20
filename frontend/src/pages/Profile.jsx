@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ActivityHeatmap from "../components/ActivityHeatmap";
 import {
   UserCircle,
   Phone,
@@ -124,8 +125,12 @@ setUser(response.data.user);
 
         </div>
       </div>
+      <div className="profile-activity">
+        <ActivityHeatmap />
+      </div>
     </div>
   );
 };
+
 
 export default Profile;

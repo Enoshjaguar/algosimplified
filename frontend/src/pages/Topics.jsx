@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
+console.log("CURRENT API URL:", API_URL);
 import { ChevronDown, ChevronRight, Check } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -271,7 +272,7 @@ const handleSolve = async (problemId) => {
     rel="noopener noreferrer"
     className="problem-title"
   >
-    {problem.title}
+   <h3>{problem.title}</h3> 
   </a>
 
   <div className="problem-details">

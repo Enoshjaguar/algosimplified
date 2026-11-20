@@ -11,7 +11,7 @@ import ComingSoon from "./components/ComingSoon";
 import SystemDesign from "./pages/SystemDesign";
 import SystemDesignDetails from "./pages/SystemDesignDetails";
 import Profile from "./pages/Profile";
-
+import Leaderboard from "./pages/Leaderboard";
 function App() {
   const renderProtectedPage = (page) => (
     <ProtectedRoute>
@@ -65,15 +65,10 @@ function App() {
           )}
         />
 
-        <Route
-          path="/leaderboard"
-          element={renderProtectedPage(
-            <ComingSoon
-              title="Leaderboard"
-              description="Compete with fellow learners, earn points, and climb the AlgoSimplified rankings. Coming soon!"
-            />
-          )}
-        />
+     <Route
+  path="/leaderboard"
+  element={renderProtectedPage(<Leaderboard />)}
+/>
 
         <Route
           path="/settings"
@@ -95,7 +90,10 @@ function App() {
             />
           )}
         />
+        
       </Routes>
+
+      
     </BrowserRouter>
   );
 }

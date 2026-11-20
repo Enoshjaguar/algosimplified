@@ -587,6 +587,135 @@ const problems = [
     score: 7
 },
 
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Search in Linked List",
+    platform: "GFG",
+    problemLink: "https://www.geeksforgeeks.org/problems/search-in-linked-list/1",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Insert in a Singly Linked List",
+    platform: "GFG",
+    problemLink: "https://www.geeksforgeeks.org/problems/insertion-at-a-given-position-in-a-linked-list/1",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Remove Nth Node From End of List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+    difficulty: "Medium",
+    score: 7
+},
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Design Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/design-linked-list/",
+    difficulty: "Medium",
+    score: 7
+},
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Odd Even Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/odd-even-linked-list/",
+    difficulty: "Medium",
+    score: 7
+},
+{
+    topic: "Linked List",
+    pattern: "Basic Operations",
+    title: "Intersection of Two Linked Lists",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/intersection-of-two-linked-lists/",
+    difficulty: "Easy",
+    score: 3
+},
+
+{
+    topic: "Linked List",
+    pattern: "Fast and Slow Pointers",
+    title: "Middle of the Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/middle-of-the-linked-list/",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Fast and Slow Pointers",
+    title: "Linked List Cycle",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/linked-list-cycle/",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Fast and Slow Pointers",
+    title: "Linked List Cycle II",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/linked-list-cycle-ii/",
+    difficulty: "Medium",
+    score: 7
+},
+
+{
+    topic: "Linked List",
+    pattern: "Reversal",
+    title: "Reverse Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/reverse-linked-list/",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Reversal",
+    title: "Reverse Linked List II",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/reverse-linked-list-ii/",
+    difficulty: "Medium",
+    score: 7
+},
+{
+    topic: "Linked List",
+    pattern: "Reversal",
+    title: "Palindrome Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/palindrome-linked-list/",
+    difficulty: "Easy",
+    score: 3
+},
+{
+    topic: "Linked List",
+    pattern: "Reversal",
+    title: "Maximum Twin Sum of a Linked List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/",
+    difficulty: "Medium",
+    score: 7
+},
+{
+    topic: "Linked List",
+    pattern: "Reversal",
+    title: "Rotate List",
+    platform: "LeetCode",
+    problemLink: "https://leetcode.com/problems/rotate-list/",
+    difficulty: "Medium",
+    score: 7
+}
+
 ];
 
 module.exports = problems;
