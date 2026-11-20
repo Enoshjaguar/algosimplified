@@ -141,11 +141,33 @@
         gap: 3px;
     }
 
+    /* Month labels */
     .heatmap-months {
+        grid-auto-columns: 10px;
+        column-gap: 3px;
         height: 22px;
     }
 
     .heatmap-month {
         font-size: 11px;
     }
+}
+
+    /* Month Labels */
+.heatmap-months {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 13px;
+    column-gap: 4px;
+    width: max-content;
+    height: 25px;
+    margin-bottom: 5px;
+}
+
+.heatmap-month {
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+    white-space: nowrap;
+}
 }

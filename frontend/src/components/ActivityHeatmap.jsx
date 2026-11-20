@@ -134,18 +134,18 @@ const ActivityHeatmap = () => {
                 <div className="heatmap-calendar">
 
                     <div className="heatmap-months">
-                        {monthLabels.map((month, index) => (
-                            <span
-                                key={index}
-                                className="heatmap-month"
-                                style={{
-                                    left: `${month.weekIndex * 17}px`
-                                }}
-                            >
-                                {month.name}
-                            </span>
-                        ))}
-                    </div>
+    {monthLabels.map((month, index) => (
+        <span
+            key={index}
+            className="heatmap-month"
+            style={{
+                gridColumnStart: month.weekIndex + 1
+            }}
+        >
+            {month.name}
+        </span>
+    ))}
+</div>
 
                     <div className="heatmap-grid">
                         {weeks.map((week, weekIndex) => (
